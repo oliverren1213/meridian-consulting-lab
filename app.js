@@ -1,5 +1,6 @@
 // All numerical cases are invented for practice; they are not company findings.
-const weeks = [
+const isChinese = document.documentElement.lang === 'zh-CN';
+const englishWeeks = [
   {
     title:'Structure the problem', subtitle:'Questions before frameworks',
     description:'Turn a broad business question into a decision you can investigate. A framework earns its place only if it helps answer that question.',
@@ -122,9 +123,15 @@ const weeks = [
   }
 ];
 
+const weeks = isChinese ? chineseWeeks : englishWeeks;
+const ui = isChinese ? {"session": "60 分钟双人练习", "before": "见面之前 · 45 分钟", "during": "一起练习 · 60 分钟", "output": "本周产出", "practice": "练习案例", "fictional": "虚构练习案例", "answer": "先讨论，再查看参考答案", "feedback": "如何给出有效反馈", "feedbackNote": "每一项都指出：搭档做得好的一点、一个具体改进，以及一次重新练习的机会。评价标准：尚未掌握 / 逐步掌握 / 清晰且能独立完成。", "actions": "研究与实习行动", "research": "研究：", "internships": "实习：", "download": "下载中文学习模板", "kit": "study-kit-zh.md", "finish": "复盘、改进，再开始下一轮练习。"} : {"session": "60-minute partner session", "before": "BEFORE YOU MEET · 45 MIN", "during": "TOGETHER · 60 MIN", "output": "THIS WEEK’S OUTPUT", "practice": "THE PRACTICE CASE", "fictional": "Fictional exercise", "answer": "Discuss first. Then read the answer.", "feedback": "What good feedback sounds like", "feedbackNote": "For each point, name one thing your partner did well, one concrete improvement and one retry. Use: not yet / developing / clear and independent.", "actions": "Research & internship actions", "research": "Research:", "internships": "Internships:", "download": "Download working templates", "kit": "study-kit.md", "finish": "Review. Refine. Start the next cycle."};
+
 const list = document.getElementById('week-list');
 const session = document.getElementById('session');
 const pad = value => String(value).padStart(2, '0');
+const weekLabel = number => isChinese ? `第 ${pad(number)} 周` : `Week ${pad(number)}`;
+const languageLink = document.querySelector('[data-language-link]');
+languageLink?.addEventListener('click', () => { languageLink.hash = location.hash; });
 
 function renderWeek(number) {
   if (!Number.isInteger(number) || number < 1 || number > weeks.length) return false;
@@ -136,15 +143,15 @@ function renderWeek(number) {
     else link.removeAttribute('aria-current');
   }
   session.innerHTML = `
-    <div class="session-top"><span class="pill">WEEK ${pad(number)}</span><span class="quiet">60-minute partner session</span></div>
-    <h3 id="session-title">${w.title}.</h3><p class="session-description">${w.description}</p>
-    <div class="session-blocks"><div><span class="tiny-label">BEFORE YOU MEET · 45 MIN</span><h4>${w.prepTitle}</h4><p>${w.prep}</p></div><div><span class="tiny-label">TOGETHER · 60 MIN</span><h4>${w.togetherTitle}</h4><p>${w.together}</p></div></div>
-    <div class="deliverable"><span class="deliverable-label">THIS WEEK’S OUTPUT</span><p>${w.output}</p></div>
-    <div class="case"><div class="case-top"><span class="case-label">THE PRACTICE CASE</span><span class="case-tag">Fictional exercise</span></div><h4>${w.caseTitle}</h4><p class="case-prompt">${w.prompt}</p>
-    <details><summary>Discuss first. Then read the answer.</summary><div class="detail-body"><p>${w.answer}</p></div></details>
-    <details><summary>What good feedback sounds like</summary><div class="detail-body"><ul>${w.feedback.map(item => `<li>${item}</li>`).join('')}</ul><p>For each point, name one thing your partner did well, one concrete improvement and one retry. Use: not yet / developing / clear and independent.</p></div></details>
-    <details><summary>Research & internship actions</summary><div class="detail-body"><p><strong>Research:</strong> ${w.project}</p><p><strong>Internships:</strong> ${w.career}</p></div></details></div>
-    <div class="session-bottom"><a class="button" href="study-kit.md" download>Download working templates</a>${number < 8 ? `<button class="button secondary" type="button" id="next-week">Week ${pad(number + 1)}</button>` : '<span class="quiet">Review. Refine. Start the next cycle.</span>'}</div>`;
+    <div class="session-top"><span class="pill">${weekLabel(number).toUpperCase()}</span><span class="quiet">${ui.session}</span></div>
+    <h3 id="session-title">${w.title}${isChinese ? '。' : '.'}</h3><p class="session-description">${w.description}</p>
+    <div class="session-blocks"><div><span class="tiny-label">${ui.before}</span><h4>${w.prepTitle}</h4><p>${w.prep}</p></div><div><span class="tiny-label">${ui.during}</span><h4>${w.togetherTitle}</h4><p>${w.together}</p></div></div>
+    <div class="deliverable"><span class="deliverable-label">${ui.output}</span><p>${w.output}</p></div>
+    <div class="case"><div class="case-top"><span class="case-label">${ui.practice}</span><span class="case-tag">${ui.fictional}</span></div><h4>${w.caseTitle}</h4><p class="case-prompt">${w.prompt}</p>
+    <details><summary>${ui.answer}</summary><div class="detail-body"><p>${w.answer}</p></div></details>
+    <details><summary>${ui.feedback}</summary><div class="detail-body"><ul>${w.feedback.map(item => `<li>${item}</li>`).join('')}</ul><p>${ui.feedbackNote}</p></div></details>
+    <details><summary>${ui.actions}</summary><div class="detail-body"><p><strong>${ui.research}</strong> ${w.project}</p><p><strong>${ui.internships}</strong> ${w.career}</p></div></details></div>
+    <div class="session-bottom"><a class="button" href="${ui.kit}" download>${ui.download}</a>${number < 8 ? `<button class="button secondary" type="button" id="next-week">${weekLabel(number + 1)}</button>` : `<span class="quiet">${ui.finish}</span>`}</div>`;
   document.getElementById('next-week')?.addEventListener('click', () => navigateWeek(number + 1, true));
   return true;
 }
