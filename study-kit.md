@@ -1,6 +1,6 @@
 # Meridian Consulting Lab — Working kit
 
-An eight-week, two-person consulting learning programme. Proposed independent student initiative connecting HEC–Bocconi and HKU. No university or club endorsement is implied.
+An eight-week, two-person consulting learning programme. Proposed independent student initiative connecting HKU and the HEC–Bocconi programme. No university or club endorsement is implied.
 
 ## The weekly commitment
 

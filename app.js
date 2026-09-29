@@ -152,6 +152,7 @@ function renderWeek(number) {
     <details><summary>${ui.feedback}</summary><div class="detail-body"><ul>${w.feedback.map(item => `<li>${item}</li>`).join('')}</ul><p>${ui.feedbackNote}</p></div></details>
     <details><summary>${ui.actions}</summary><div class="detail-body"><p><strong>${ui.research}</strong> ${w.project}</p><p><strong>${ui.internships}</strong> ${w.career}</p></div></details></div>
     <div class="session-bottom"><a class="button" href="${ui.kit}" download>${ui.download}</a>${number < 8 ? `<button class="button secondary" type="button" id="next-week">${weekLabel(number + 1)}</button>` : `<span class="quiet">${ui.finish}</span>`}</div>`;
+  window.meridianLab?.mountWeek(number);
   document.getElementById('next-week')?.addEventListener('click', () => navigateWeek(number + 1, true));
   return true;
 }
